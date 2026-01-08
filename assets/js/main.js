@@ -80,9 +80,12 @@ function initModal() {
     let currentWallpapers = [];
     let currentIndex = 0;
 
-    function openModal(imageSrc, title, resolution, size, downloads) {
+    function openModal(imageSrc, title, description, resolution, size, downloads, concept) {
         $modalContent.attr('src', imageSrc);
         $modalInfo.find('h3').text(title);
+        $modalInfo.find('.description').text(description);
+        $modalInfo.find('.author').text('作者: 凌风逐月');
+        $modalInfo.find('.concept').text('创作理念: ' + concept);
         $modalInfo.find('.resolution').text('分辨率: ' + resolution);
         $modalInfo.find('.size').text('大小: ' + size);
         $modalInfo.find('.downloads').text('下载: ' + downloads + '次');
@@ -98,22 +101,24 @@ function initModal() {
     function showNext() {
         currentIndex = (currentIndex + 1) % currentWallpapers.length;
         const wallpaper = currentWallpapers[currentIndex];
-        openModal(wallpaper.src, wallpaper.title, wallpaper.resolution, wallpaper.size, wallpaper.downloads);
+        openModal(wallpaper.src, wallpaper.title, wallpaper.description, wallpaper.resolution, wallpaper.size, wallpaper.downloads, wallpaper.concept);
     }
 
     function showPrev() {
         currentIndex = (currentIndex - 1 + currentWallpapers.length) % currentWallpapers.length;
         const wallpaper = currentWallpapers[currentIndex];
-        openModal(wallpaper.src, wallpaper.title, wallpaper.resolution, wallpaper.size, wallpaper.downloads);
+        openModal(wallpaper.src, wallpaper.title, wallpaper.description, wallpaper.resolution, wallpaper.size, wallpaper.downloads, wallpaper.concept);
     }
 
     $(document).on('click', '.preview-btn', function() {
         const $card = $(this).closest('.wallpaper-card');
         const imageSrc = $card.find('img').attr('src');
         const title = $card.find('h4').text();
+        const description = $card.find('.description').text();
         const resolution = $card.find('.resolution').text();
         const size = $card.find('.size').text();
         const downloads = $card.find('.downloads').text();
+        const concept = $card.data('concept');
 
         currentWallpapers = [];
         currentIndex = 0;
@@ -122,9 +127,11 @@ function initModal() {
             currentWallpapers.push({
                 src: $(this).find('img').attr('src'),
                 title: $(this).find('h4').text(),
+                description: $(this).find('.description').text(),
                 resolution: $(this).find('.resolution').text(),
                 size: $(this).find('.size').text(),
-                downloads: $(this).find('.downloads').text()
+                downloads: $(this).find('.downloads').text(),
+                concept: $(this).data('concept')
             });
 
             if ($(this).find('img').attr('src') === imageSrc) {
@@ -132,7 +139,7 @@ function initModal() {
             }
         });
 
-        openModal(imageSrc, title, resolution, size, downloads);
+        openModal(imageSrc, title, description, resolution, size, downloads, concept);
     });
 
     $modal.on('click', '.modal-close', closeModal);
